@@ -25,11 +25,7 @@ public class UserService {
     }
 
     @Transactional
-    public void createUser(User user) {
-        if (isExist(user.getId())) {
-            throw new BaseException("id가 이미 존재합니다.");
-        }
-
-        userRepository.save(user);
+    public User createUser(User user) {
+        return userRepository.save(user);
     }
 }

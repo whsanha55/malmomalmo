@@ -1,9 +1,34 @@
-amazon.aws:
-  access-key: AKIARQKYYCZDDEWTTPOS
-  secret-key: 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
-openai:
-  key: "sk-proj-Ctklc37OjaOOu6suGMqXT3BlbkFJPEOn9Vqb7sZvi6rBjShu"
 spring:
+  profiles:
+    default: local
   main:
     allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:mysql://223.130.157.144:3306/malmo?rewriteBatchedStatements=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 1000
+        jdbc:
+          batch_size: 1000
+          time_zone: Asia/Seoul
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    open-in-view: false
 
+
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      force-response: true
+      force: true
