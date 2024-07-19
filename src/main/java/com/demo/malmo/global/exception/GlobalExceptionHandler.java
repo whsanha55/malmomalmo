@@ -28,9 +28,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.notFound().build();
     }
 
-    @ExceptionHandler(PoliException.class)
-    protected ResponseEntity<String> handlePoliException(PoliException exception) {
-        log.info("PoliException : {}", exception);
+    @ExceptionHandler(BaseException.class)
+    protected ResponseEntity<String> handleBaseException(BaseException exception) {
+        log.info("handleBaseException : {}", exception);
         return ResponseEntity.badRequest().body(exception.getLocalizedMessage());
     }
 

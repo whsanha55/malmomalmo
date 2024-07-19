@@ -1,6 +1,6 @@
 package com.demo.malmo.user.service;
 
-import com.demo.malmo.global.exception.PoliException;
+import com.demo.malmo.global.exception.BaseException;
 import com.demo.malmo.user.entity.User;
 import com.demo.malmo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class UserService {
 
     public User getUser(String id) {
         return userRepository.findById(id)
-            .orElseThrow(() -> new PoliException("user not found"));
+            .orElseThrow(() -> new BaseException("user not found"));
     }
 
     public boolean isExist(String id) {
@@ -27,7 +27,7 @@ public class UserService {
     @Transactional
     public void createUser(User user) {
         if (isExist(user.getId())) {
-            throw new PoliException("id가 이미 존재합니다.");
+            throw new BaseException("id가 이미 존재합니다.");
         }
 
         userRepository.save(user);
