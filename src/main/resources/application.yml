@@ -1,0 +1,9 @@
+amazon.aws:
+  access-key: AKIARQKYYCZDDEWTTPOS
+  secret-key: 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
+openai:
+  key: "sk-proj-Ctklc37OjaOOu6suGMqXT3BlbkFJPEOn9Vqb7sZvi6rBjShu"
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
