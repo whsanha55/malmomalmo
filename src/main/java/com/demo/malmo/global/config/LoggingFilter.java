@@ -32,9 +32,8 @@ public class LoggingFilter extends OncePerRequestFilter {
         throws ServletException, IOException {
         var start = System.currentTimeMillis();
         var requestWrapper = new ContentCachingRequestWrapper(request);
-        var responseWrapper = new ContentCachingResponseWrapper(response);
 
-        chain.doFilter(requestWrapper, responseWrapper);
+        chain.doFilter(requestWrapper, response);
 
         var end = System.currentTimeMillis();
         var requestURI = request.getRequestURI();
@@ -47,9 +46,6 @@ public class LoggingFilter extends OncePerRequestFilter {
             getRequestBody(requestWrapper),
             getHeaders(request));
 
-        log.info("[RESPONSE] : {}", getResponseBody(responseWrapper));
-
-        responseWrapper.copyBodyToResponse();
     }
 
 
@@ -77,16 +73,4 @@ public class LoggingFilter extends OncePerRequestFilter {
         return "";
     }
 
-    private String getResponseBody(ServletResponse response) {
-        try {
-            var wrapper = WebUtils.getNativeResponse(response, ContentCachingResponseWrapper.class);
-            if (wrapper != null) {
-                return new String(wrapper.getContentAsByteArray(), wrapper.getCharacterEncoding());
-            }
-        } catch (UnsupportedEncodingException e) {
-            log.error("", e);
-        }
-        return "";
-
-    }
 }

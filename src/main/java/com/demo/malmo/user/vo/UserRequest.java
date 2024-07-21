@@ -1,6 +1,6 @@
 package com.demo.malmo.user.vo;
 
-import com.demo.malmo.user.entity.User;
+import com.demo.malmo.user.entity.UserEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -12,8 +12,8 @@ public class UserRequest {
     @Schema(description = "email", example = "hello@naver.com")
     private String email;
 
-    public User toEntity() {
-        return User.builder()
+    public UserEntity toEntity() {
+        return UserEntity.builder()
             .userId(userId)
             .email(email)
             .build();

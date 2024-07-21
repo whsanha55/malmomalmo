@@ -1,6 +1,6 @@
 package com.demo.malmo.user;
 
-import com.demo.malmo.user.entity.User;
+import com.demo.malmo.user.entity.UserEntity;
 import com.demo.malmo.user.service.UserService;
 import com.demo.malmo.user.vo.UserRequest;
 import jakarta.validation.Valid;
@@ -19,7 +19,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/user")
-    public User getUser(String id) {
+    public UserEntity getUser(String id) {
         return userService.getUser(id);
     }
 

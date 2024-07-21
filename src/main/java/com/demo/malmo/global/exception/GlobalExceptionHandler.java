@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BaseException.class)
     protected ResponseEntity<String> handleBaseException(BaseException exception) {
         log.info("handleBaseException : {}", exception);
-        return ResponseEntity.badRequest().body(exception.getLocalizedMessage());
+        return ResponseEntity.status(exception.getHttpStatus()).body(exception.getLocalizedMessage());
     }
 
     @ExceptionHandler(value = Exception.class)
