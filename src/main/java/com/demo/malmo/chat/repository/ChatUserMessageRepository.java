@@ -8,11 +8,11 @@ import org.springframework.data.jpa.repository.Query;
 public interface ChatUserMessageRepository extends JpaRepository<ChatUserMessageEntity, Long> {
 
     @Query("""
-                select cum
-                from ChatUserMessage cum
-                join fetch cum.chatAiMessages cam
-                where cum.chatRoomId = :chatRoomId
-                order by cum.createdAt desc
+            select cum
+            from ChatUserMessage cum
+            join fetch cum.chatAiMessages cam
+            where cum.chatRoomId = :chatRoomId
+            order by cum.createdAt desc
         """)
     List<ChatUserMessageEntity> findByChatRoomId(Long chatRoomId);
 }

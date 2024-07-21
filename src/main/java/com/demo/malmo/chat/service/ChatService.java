@@ -51,6 +51,14 @@ public class ChatService {
             .orElseThrow(() -> new BaseException("ChatRoom not found"));
     }
 
+    public List<ChatRoomEntity> getChatRooms(String userId) {
+        return chatRoomRepository.findByUserIdOrderByIdDesc(userId);
+    }
+
+    public List<ChatUserMessageEntity> getChatMessages(Long chatRoomId) {
+        return chatUserMessageRepository.findByChatRoomId(chatRoomId);
+    }
+
     public List<ChatUserMessageEntity> getChatUserMessages(Long chatRoomId) {
         return chatUserMessageRepository.findByChatRoomId(chatRoomId);
     }

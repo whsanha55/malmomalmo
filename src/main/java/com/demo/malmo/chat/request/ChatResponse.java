@@ -1,12 +1,15 @@
 package com.demo.malmo.chat.request;
 
+import com.demo.malmo.chat.entity.ChatAiMessageEntity;
 import com.demo.malmo.chat.enums.ChatRoleEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
 
 @Value
 @Builder
+@AllArgsConstructor
 public class ChatResponse {
 
     @Schema(description = "역할 모자", example = "BLUD_HAT")
@@ -14,4 +17,9 @@ public class ChatResponse {
 
     @Schema(description = "대화 내용", example = "hello world")
     String message;
+
+    public ChatResponse(ChatAiMessageEntity entity) {
+        this.role = entity.getRole();
+        this.message = entity.getMessage();
+    }
 }
