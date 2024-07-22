@@ -12,6 +12,9 @@ import lombok.Value;
 @AllArgsConstructor
 public class ChatResponse {
 
+    @Schema(description = "aiChatId", example = "123")
+    Long id;
+
     @Schema(description = "역할 모자", example = "BLUD_HAT")
     ChatRoleEnum role;
 
@@ -19,6 +22,7 @@ public class ChatResponse {
     String message;
 
     public ChatResponse(ChatAiMessageEntity entity) {
+        this.id = entity.getId();
         this.role = entity.getRole();
         this.message = entity.getMessage();
     }

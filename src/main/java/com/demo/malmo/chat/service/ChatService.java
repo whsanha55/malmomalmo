@@ -8,6 +8,7 @@ import com.demo.malmo.chat.repository.ChatAiMessageRepository;
 import com.demo.malmo.chat.repository.ChatRoomRepository;
 import com.demo.malmo.chat.repository.ChatUserMessageRepository;
 import com.demo.malmo.global.exception.BaseException;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ public class ChatService {
     private final ChatUserMessageRepository chatUserMessageRepository;
     private final ChatAiMessageRepository chatAiMessageRepository;
 
+    @Transactional
     public ChatRoomEntity createRoom(String userId, String chatCategory) {
         return chatRoomRepository.save(ChatRoomEntity.builder()
             .userId(userId)
@@ -30,6 +32,7 @@ public class ChatService {
             .build());
     }
 
+    @Transactional
     public ChatUserMessageEntity createChatUserMessage(ChatRoomEntity chatRoom, String message) {
         return chatUserMessageRepository.save(ChatUserMessageEntity.builder()
             .chatRoomId(chatRoom.getId())
@@ -37,6 +40,7 @@ public class ChatService {
             .build());
     }
 
+    @Transactional
     public ChatAiMessageEntity createChatAiMessage(ChatUserMessageEntity chatUserMessage, String message, ChatRoleEnum role) {
         return chatAiMessageRepository.save(ChatAiMessageEntity.builder()
             .chatRoomId(chatUserMessage.getChatRoomId())
@@ -63,5 +67,18 @@ public class ChatService {
         return chatUserMessageRepository.findByChatRoomId(chatRoomId);
     }
 
+    @Transactional
+    public void deleteRoom(Long chatRoomId) {
+        var chatRoom = getRoom(chatRoomId);
+        chatRoom.delete();
+        chatRoomRepository.save(chatRoom);
+    }
 
+    @Transactional
+    public void deleteAiChat(Long aiChatId) {
+        var aiChat = chatAiMessageRepository.findById(aiChatId)
+            .orElseThrow(() -> new BaseException("ChatAiMessage not found"));
+        aiChat.delete();
+        chatAiMessageRepository.save(aiChat);
+    }
 }

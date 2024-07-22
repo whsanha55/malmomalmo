@@ -12,6 +12,7 @@ public interface ChatUserMessageRepository extends JpaRepository<ChatUserMessage
             from ChatUserMessage cum
             join fetch cum.chatAiMessages cam
             where cum.chatRoomId = :chatRoomId
+            and cam.deleted = false
             order by cum.createdAt desc
         """)
     List<ChatUserMessageEntity> findByChatRoomId(Long chatRoomId);
