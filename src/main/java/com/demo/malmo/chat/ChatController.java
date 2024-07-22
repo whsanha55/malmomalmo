@@ -1,6 +1,8 @@
 package com.demo.malmo.chat;
 
 import com.demo.malmo.chat.facade.ChatFacade;
+import com.demo.malmo.chat.request.ChatAiRoomBookMarkResponse;
+import com.demo.malmo.chat.request.ChatBookMarkResponse;
 import com.demo.malmo.chat.request.ChatMessageResponse;
 import com.demo.malmo.chat.request.ChatRequest;
 import com.demo.malmo.chat.request.ChatResponse;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,6 +59,23 @@ public class ChatController {
         userService.getUser(userId);
         return new ChatMessageResponse(chatService.getChatMessages(roomId));
     }
+
+    @Operation(summary = "채팅 북마크 조회", description = "최신순으로 나열 , 페이징 미구현(해야하나...ㅠ)")
+    @GetMapping("/chat/bookmark")
+    public ChatBookMarkResponse getChatMessages(@RequestHeader("user-id") String userId) {
+        userService.getUser(userId);
+        var aiMessages = chatService.findBookMarkedChatAiMessages(userId);
+        return new ChatBookMarkResponse(aiMessages);
+    }
+
+    @Operation(summary = "ai 모자 채팅 내역 북마크", description = "스위치 형식으로 북마크 설정/해제")
+    @PutMapping("/chat/bookmark/{aiChatId}")
+    public BaseResponse bookmarkChatMessage(@RequestHeader("user-id") String userId, @PathVariable Long aiChatId) {
+        userService.getUser(userId);
+        var aiMessage = chatService.updateBookmark(aiChatId);
+        return new ChatAiRoomBookMarkResponse(aiMessage.isBookmarked());
+    }
+
 
     @Operation(summary = "채팅방 삭제", description = "채팅방 삭제")
     @DeleteMapping("/chat/rooms/{roomId}")

@@ -2,15 +2,18 @@ package com.demo.malmo.chat.request;
 
 import com.demo.malmo.chat.entity.ChatAiMessageEntity;
 import com.demo.malmo.chat.enums.ChatRoleEnum;
+import com.demo.malmo.global.base.BaseResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 
+@EqualsAndHashCode(callSuper = true)
 @Value
 @Builder
 @AllArgsConstructor
-public class ChatResponse {
+public class ChatResponse extends BaseResponse {
 
     @Schema(description = "aiChatId", example = "123")
     Long id;

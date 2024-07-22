@@ -1,12 +1,15 @@
 package com.demo.malmo.chat.request;
 
 import com.demo.malmo.chat.entity.ChatRoomEntity;
+import com.demo.malmo.global.base.BaseResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 
+@EqualsAndHashCode(callSuper = true)
 @Value
-public class ChatRoomResponse {
+public class ChatRoomResponse extends BaseResponse {
 
     List<ChatRoom> rooms;
 
