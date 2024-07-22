@@ -4,13 +4,13 @@ spring:
   main:
     allow-bean-definition-overriding: true
   datasource:
-    url: jdbc:mysql://223.130.157.144:3306/malmo?rewriteBatchedStatements=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://223.130.157.144:3306/malmo?rewriteBatchedStatements=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
@@ -21,7 +21,6 @@ spring:
         jdbc:
           batch_size: 1000
           time_zone: Asia/Seoul
-    database-platform: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false
 
 
