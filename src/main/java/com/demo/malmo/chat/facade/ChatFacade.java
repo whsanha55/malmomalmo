@@ -51,6 +51,7 @@ public class ChatFacade {
                 })
                 .filter(ClovaResponse::isStream)        // clova 대화 결과 중 stream만 반환
                 .map(response -> ChatResponse.builder()     // clova 대화 결과를 ChatResponse로 변환
+                    .chatRoomId(chatRoom.getId())
                     .role(role)
                     .message(response.getMessage())
                     .build()

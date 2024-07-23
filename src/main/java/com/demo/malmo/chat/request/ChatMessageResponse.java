@@ -23,17 +23,18 @@ public class ChatMessageResponse extends BaseResponse {
     @Value
     public static class ChatUserMessage {
 
+        @Schema(description = "대화 턴 단계", example = "1")
+        int phase;
         @Schema(description = "유저 메세지", example = "hello world")
         String userMessage;
-
         @Schema(description = "채팅방 카테고리", example = "room category")
         List<ChatResponse> aiMessages;
-
         @Schema(description = "생성일", example = "2021-07-01T00:00:00.000000")
         LocalDateTime createdAt;
 
         public ChatUserMessage(ChatUserMessageEntity entity) {
             this.userMessage = entity.getMessage();
+            this.phase = entity.getPhase();
             this.aiMessages = entity.getChatAiMessages().stream()
                 .map(ChatResponse::new)
                 .toList();

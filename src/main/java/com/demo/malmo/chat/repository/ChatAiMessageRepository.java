@@ -13,6 +13,7 @@ public interface ChatAiMessageRepository extends JpaRepository<ChatAiMessageEnti
         join fetch cam.chatRoom cr
         where cr.userId = :userId
         and cam.bookmarked = true
+        and cam.deleted = false
         order by cam.id desc
         """)
     List<ChatAiMessageEntity> findBookmarked(String userId);

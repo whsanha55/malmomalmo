@@ -16,4 +16,6 @@ public interface ChatUserMessageRepository extends JpaRepository<ChatUserMessage
             order by cum.createdAt desc
         """)
     List<ChatUserMessageEntity> findByChatRoomId(Long chatRoomId);
+
+    int countByChatRoomId(Long chatRoomId);
 }

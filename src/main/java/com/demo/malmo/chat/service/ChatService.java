@@ -34,8 +34,10 @@ public class ChatService {
 
     @Transactional
     public ChatUserMessageEntity createChatUserMessage(ChatRoomEntity chatRoom, String message) {
+        var phase = chatUserMessageRepository.countByChatRoomId(chatRoom.getId());
         return chatUserMessageRepository.save(ChatUserMessageEntity.builder()
             .chatRoomId(chatRoom.getId())
+            .phase(phase + 1)
             .message(message)
             .build());
     }

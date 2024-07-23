@@ -18,11 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 public class HyperClovaRequest {
 
     private List<Message> messages;
-    private double topP;
-    private int topK;
-    private int maxTokens;
-    private double temperature;
-    private double repeatPenalty;
+    private double topP = 0.8;
+    private int topK = 0;
+    private int maxTokens = 4096;
+    private double temperature = 0.1;
+    private double repeatPenalty = 1.2;
     private List<String> stopBefore;
     private boolean includeAiFilters;
     private int seed;

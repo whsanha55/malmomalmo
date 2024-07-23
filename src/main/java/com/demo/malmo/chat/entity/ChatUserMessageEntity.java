@@ -34,6 +34,9 @@ public class ChatUserMessageEntity extends BaseEntity {
 
     private Long chatRoomId;
 
+    @Builder.Default
+    private int phase = 1;      // 대화 턴 단계 최초는 1부터 시
+
     @Column(nullable = false)
     private String message;
 

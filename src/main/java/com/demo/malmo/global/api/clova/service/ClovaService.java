@@ -3,6 +3,8 @@ package com.demo.malmo.global.api.clova.service;
 import com.demo.malmo.chat.enums.ChatRoleEnum;
 import com.demo.malmo.global.api.clova.vo.ClovaResponse;
 import com.demo.malmo.global.api.clova.vo.HyperClovaRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +19,7 @@ import reactor.core.publisher.Mono;
 public class ClovaService {
 
     private final WebClient clovaWebClient;
+    private final ObjectMapper objectMapper;
 
 
     public Flux<ClovaResponse> getChatCompletion(HyperClovaRequest request, ChatRoleEnum role) {
@@ -32,7 +35,17 @@ public class ClovaService {
                 log.info("stringMono : {}", stringMono);
                 return Mono.error(new RuntimeException(clientResponse.toString()));
             })
-            .bodyToFlux(ClovaResponse.class);
+            .bodyToFlux(String.class)
+            .doOnNext(response -> log.info("response : {}", response))
+            .map(response -> {
+                try {
+                    return objectMapper.readValue(response, ClovaResponse.class);
+                } catch (JsonProcessingException e) {
+                    log.error("",e);
+                    return new ClovaResponse();
+                }
+            });
+//            .bodyToFlux(ClovaResponse.class);
     }
 
 
