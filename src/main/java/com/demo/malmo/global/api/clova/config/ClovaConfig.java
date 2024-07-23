@@ -29,8 +29,8 @@ public class ClovaConfig {
     public WebClient clovaWebClient() {
         return WebClient.builder()
             .baseUrl("https://clovastudio.stream.ntruss.com")
-            .defaultHeader("X-NCP-CLOVASTUDIO-API-KEY", studioApiKey)
-            .defaultHeader("X-NCP-APIGW-API-KEY", gatewayKey)
+//            .defaultHeader("X-NCP-CLOVASTUDIO-API-KEY", studioApiKey)
+//            .defaultHeader("X-NCP-APIGW-API-KEY", gatewayKey)
             .defaultHeader("Content-Type", "application/json")
             .defaultHeader("Accept", "text/event-stream")
             .build();

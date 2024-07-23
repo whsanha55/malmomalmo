@@ -24,9 +24,12 @@ public class ClovaService {
 
     public Flux<ClovaResponse> getChatCompletion(HyperClovaRequest request, ChatRoleEnum role) {
 
+        log.info("request : {}", request);
         // TODO: 7/21/24 role 에 해당하는 각 모델에 대한 clova 대화 생성 필요
         return clovaWebClient.post()
-            .uri("/testapp/v1/chat-completions/HCX-DASH-001")
+            .uri("/testapp/v1/chat-completions/HCX-003")
+            .header("X-NCP-CLOVASTUDIO-API-KEY", role.getClovaKey())
+            .header("X-NCP-APIGW-API-KEY", role.getGatewayKey())
             .bodyValue(request)
             .retrieve()
             .onStatus(HttpStatusCode::isError, clientResponse -> {
