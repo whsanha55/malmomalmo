@@ -1,4 +1,4 @@
-package com.demo.malmo.chat.request;
+package com.demo.malmo.chat.vo;
 
 import com.demo.malmo.global.base.BaseResponse;
 import io.swagger.v3.oas.annotations.media.Schema;

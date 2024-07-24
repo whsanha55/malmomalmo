@@ -61,6 +61,11 @@ public class ChatService {
         return chatRoomRepository.findByUserIdOrderByIdDesc(userId);
     }
 
+    public ChatUserMessageEntity getChatUserMessage(Long chatPhaseId) {
+
+        return chatUserMessageRepository.findById(chatPhaseId).orElseThrow(() -> new BaseException("ChatUserMessage not found"));
+    }
+
     public List<ChatUserMessageEntity> getChatMessages(Long chatRoomId) {
         return chatUserMessageRepository.findByChatRoomId(chatRoomId);
     }

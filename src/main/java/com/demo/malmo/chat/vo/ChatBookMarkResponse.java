@@ -1,4 +1,4 @@
-package com.demo.malmo.chat.request;
+package com.demo.malmo.chat.vo;
 
 import com.demo.malmo.chat.entity.ChatAiMessageEntity;
 import com.demo.malmo.chat.enums.ChatRoleEnum;

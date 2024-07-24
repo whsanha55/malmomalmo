@@ -1,13 +1,15 @@
 package com.demo.malmo.chat;
 
 import com.demo.malmo.chat.facade.ChatFacade;
-import com.demo.malmo.chat.request.ChatAiRoomBookMarkResponse;
-import com.demo.malmo.chat.request.ChatBookMarkResponse;
-import com.demo.malmo.chat.request.ChatMessageResponse;
-import com.demo.malmo.chat.request.ChatRequest;
-import com.demo.malmo.chat.request.ChatResponse;
-import com.demo.malmo.chat.request.ChatRoomResponse;
 import com.demo.malmo.chat.service.ChatService;
+import com.demo.malmo.chat.vo.ChatAiRoomBookMarkResponse;
+import com.demo.malmo.chat.vo.ChatBookMarkResponse;
+import com.demo.malmo.chat.vo.ChatMessageResponse;
+import com.demo.malmo.chat.vo.ChatMessageResponse.ChatUserMessage;
+import com.demo.malmo.chat.vo.ChatRequest;
+import com.demo.malmo.chat.vo.ChatRoomResponse;
+import com.demo.malmo.chat.vo.ChatStreamRequest;
+import com.demo.malmo.chat.vo.ChatStreamResponse;
 import com.demo.malmo.global.base.BaseResponse;
 import com.demo.malmo.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,15 +37,19 @@ public class ChatController {
     private final ChatFacade chatFacade;
     private final ChatService chatService;
 
-    @Operation(summary = "새로운 대화 입력", description = """
-        최초 대화의 경우 categoryId 필수, 기존 채팅방인 경우 roomId 필수 <br>
-        한번의 요청으로 6번의 대화가 순서 보장하지 않고 생성됩니다. <br>
-        <b>TODO 특정 모자의 요청은 아직 미구현 :: 개발 예정</b> <br>
-        사용자의 대화를 입력하면 AI 대화를 생성하여 sse 반환""")
-    @PostMapping(value = "/chat", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<ChatResponse> newChat(@RequestHeader("user-id") String userId, @RequestBody ChatRequest request) {
+    @Operation(summary = "새로운 대화 입력", description = "최초 대화의 경우 categoryId 필수, 기존 채팅방인 경우 roomId 필수")
+    @PostMapping(value = "/chat")
+    public ChatUserMessage newChat(@RequestHeader("user-id") String userId, @RequestBody ChatRequest request) {
         userService.getUser(userId);
-        return chatFacade.newChat(request, userId);
+        var chatUserMessage = chatFacade.newChat(request, userId);
+        return new ChatMessageResponse.ChatUserMessage(chatUserMessage);
+    }
+
+    @Operation(summary = "ai 실시간 대화", description = "AI 대화를 생성하여 sse 반환")
+    @PostMapping(value = "/chat/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<ChatStreamResponse> chatStream(@RequestHeader("user-id") String userId, @RequestBody ChatStreamRequest request) {
+        userService.getUser(userId);
+        return chatFacade.chatStream(request);
     }
 
     @Operation(summary = "채팅방 목록 조회", description = "최신순으로 나열")
