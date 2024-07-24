@@ -75,10 +75,10 @@ public class ChatController {
     }
 
     @Operation(summary = "ai 모자 채팅 내역 북마크", description = "스위치 형식으로 북마크 설정/해제")
-    @PutMapping("/chat/bookmark/{aiChatId}")
-    public BaseResponse bookmarkChatMessage(@RequestHeader("user-id") String userId, @PathVariable Long aiChatId) {
+    @PutMapping("/chat/bookmark/{aiMessageId}")
+    public BaseResponse bookmarkChatMessage(@RequestHeader("user-id") String userId, @PathVariable Long aiMessageId) {
         userService.getUser(userId);
-        var aiMessage = chatService.updateBookmark(aiChatId);
+        var aiMessage = chatService.updateBookmark(aiMessageId);
         return new ChatAiRoomBookMarkResponse(aiMessage.isBookmarked());
     }
 
@@ -91,12 +91,12 @@ public class ChatController {
         return new BaseResponse();
     }
 
-    @Operation(summary = "ai 모자 대화 삭제", description = "{aiChatId}에 해당하는 ai 모자 대화 삭제")
-    @DeleteMapping("/chat/chat/{aiChatId}")
+    @Operation(summary = "ai 모자 대화 삭제", description = "{aiMesssageId}에 해당하는 ai 모자 대화 삭제")
+    @DeleteMapping("/chat/chat/{aiMesssageId}")
     public BaseResponse deleteChatMessage(@RequestHeader("user-id") String userId,
-        @PathVariable Long aiChatId) {
+        @PathVariable Long aiMesssageId) {
         userService.getUser(userId);
-        chatService.deleteAiChat(aiChatId);
+        chatService.deleteAiChat(aiMesssageId);
         return new BaseResponse();
 
     }

@@ -17,7 +17,7 @@ import lombok.Value;
 @AllArgsConstructor
 public class ChatAiMessageResponse extends BaseResponse {
 
-    @Schema(description = "aiChatId", example = "123")
+    @Schema(description = "aiMessageId", example = "123")
     Long id;
 
     @Schema(description = "대화방 ID", example = "123")

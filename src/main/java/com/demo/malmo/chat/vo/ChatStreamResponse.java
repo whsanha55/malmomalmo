@@ -13,9 +13,6 @@ import lombok.Value;
 @AllArgsConstructor
 public class ChatStreamResponse {
 
-    @Schema(description = "aiChatId", example = "123")
-    Long id;
-
     @Schema(description = "대화방 ID", example = "123")
     Long roomId;
 

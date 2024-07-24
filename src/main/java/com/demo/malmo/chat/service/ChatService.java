@@ -70,8 +70,8 @@ public class ChatService {
         return chatUserMessageRepository.findByChatRoomId(chatRoomId);
     }
 
-    public ChatAiMessageEntity getChatAiMessage(Long aiChatId) {
-        return chatAiMessageRepository.findById(aiChatId)
+    public ChatAiMessageEntity getChatAiMessage(Long aiMessageId) {
+        return chatAiMessageRepository.findById(aiMessageId)
             .orElseThrow(() -> new BaseException("ChatAiMessage not found"));
     }
 
@@ -84,10 +84,10 @@ public class ChatService {
     }
 
     @Transactional
-    public ChatAiMessageEntity updateBookmark(Long aiChatId) {
-        var aiChat = getChatAiMessage(aiChatId);
-        aiChat.updateBookMark();
-        return chatAiMessageRepository.save(aiChat);
+    public ChatAiMessageEntity updateBookmark(Long aiMessageId) {
+        var aiMessage = getChatAiMessage(aiMessageId);
+        aiMessage.updateBookMark();
+        return chatAiMessageRepository.save(aiMessage);
     }
 
     @Transactional
@@ -98,10 +98,10 @@ public class ChatService {
     }
 
     @Transactional
-    public void deleteAiChat(Long aiChatId) {
-        var aiChat = getChatAiMessage(aiChatId);
-        aiChat.delete();
-        chatAiMessageRepository.save(aiChat);
+    public void deleteAiChat(Long aiMesssageId) {
+        var aiMessage = getChatAiMessage(aiMesssageId);
+        aiMessage.delete();
+        chatAiMessageRepository.save(aiMessage);
     }
 
 
