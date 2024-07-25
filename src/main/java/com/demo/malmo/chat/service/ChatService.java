@@ -8,6 +8,7 @@ import com.demo.malmo.chat.repository.ChatAiMessageRepository;
 import com.demo.malmo.chat.repository.ChatRoomRepository;
 import com.demo.malmo.chat.repository.ChatUserMessageRepository;
 import com.demo.malmo.global.exception.BaseException;
+import jakarta.annotation.Nullable;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +34,11 @@ public class ChatService {
     }
 
     @Transactional
-    public ChatUserMessageEntity createChatUserMessage(ChatRoomEntity chatRoom, String message) {
+    public ChatUserMessageEntity createChatUserMessage(ChatRoomEntity chatRoom, String message, @Nullable Long relyAiMessageId) {
         var phase = chatUserMessageRepository.countByChatRoomId(chatRoom.getId());
         return chatUserMessageRepository.save(ChatUserMessageEntity.builder()
             .chatRoomId(chatRoom.getId())
+            .relyAiMessageId(relyAiMessageId)
             .phase(phase + 1)
             .message(message)
             .build());
@@ -50,6 +52,11 @@ public class ChatService {
             .message(message)
             .role(role)
             .build());
+    }
+
+    @Transactional
+    public ChatAiMessageEntity createChatAiMessage(ChatAiMessageEntity entity) {
+        return chatAiMessageRepository.save(entity);
     }
 
     public ChatRoomEntity getRoom(Long chatRoomId) {
@@ -83,6 +90,10 @@ public class ChatService {
         return chatAiMessageRepository.findBookmarked(userId);
     }
 
+    public List<ChatAiMessageEntity> getChatAiMessages(Long chatRoomId, ChatRoleEnum role) {
+        return chatAiMessageRepository.findByChatRoomIdAndRole(chatRoomId, role);
+    }
+
     @Transactional
     public ChatAiMessageEntity updateBookmark(Long aiMessageId) {
         var aiMessage = getChatAiMessage(aiMessageId);
@@ -105,4 +116,16 @@ public class ChatService {
     }
 
 
+    @Transactional
+    public void updateMessage(ChatAiMessageEntity entity, String message) {
+        entity.updateMessage(message);
+        chatAiMessageRepository.save(entity);
+    }
+
+    @Transactional
+    public void updateRoomName(Long roomId, String roomName) {
+        var room = getRoom(roomId);
+        room.updateName(roomName);
+        chatRoomRepository.save(room);
+    }
 }

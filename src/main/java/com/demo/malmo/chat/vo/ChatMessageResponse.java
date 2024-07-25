@@ -54,6 +54,7 @@ public class ChatMessageResponse extends BaseResponse {
             this.phase = entity.getPhase();
             this.aiMessages = Optional.ofNullable(entity.getChatAiMessages())
                 .map(messages -> messages.stream()
+                    .filter(message -> message.getRole().isHat())
                     .map(ChatAiMessageResponse::new)
                     .toList())
                 .orElse(null);

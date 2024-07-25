@@ -1,6 +1,7 @@
 package com.demo.malmo.chat.entity;
 
 import com.demo.malmo.global.base.BaseEntity;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,6 +34,9 @@ public class ChatUserMessageEntity extends BaseEntity {
     private Long id;
 
     private Long chatRoomId;
+
+    @Nullable
+    private Long relyAiMessageId;
 
     @Builder.Default
     private int phase = 1;      // 대화 턴 단계 최초는 1부터 시

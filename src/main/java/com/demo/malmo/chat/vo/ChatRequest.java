@@ -13,4 +13,7 @@ public class ChatRequest {
     private Long roomId;
     @Schema(description = "대화 내용", example = "hello world")
     private String message;
+
+    @Schema(description = "모자 선택 후 추가 페이즈 진행 시 ai 답변 id(nullable)", example = "", nullable = true)
+    private Long relyAiMessageId;
 }

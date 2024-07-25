@@ -44,4 +44,7 @@ public class ChatRoomEntity extends BaseEntity {
     @OneToMany(mappedBy = "chatRoomId")
     private List<ChatUserMessageEntity> chatUserMessages;
 
+    public void updateName(String roomName) {
+        this.roomName = roomName;
+    }
 }

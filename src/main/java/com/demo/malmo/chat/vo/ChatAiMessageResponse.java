@@ -29,10 +29,14 @@ public class ChatAiMessageResponse extends BaseResponse {
     @Schema(description = "대화 내용", example = "hello world")
     String message;
 
+    @Schema(description = "북마크 여부", example = "true")
+    boolean bookmarked;
+
     public ChatAiMessageResponse(ChatAiMessageEntity entity) {
         this.id = entity.getId();
         this.chatRoomId = entity.getChatRoomId();
         this.role = entity.getRole();
         this.message = entity.getMessage();
+        this.bookmarked = entity.isBookmarked();
     }
 }

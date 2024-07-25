@@ -9,6 +9,12 @@ public enum ChatRoleEnum {
     RED_HAT,
     BLUE_HAT,
     BLUE_HAT_BEGIN,
+    SUMMARY,
+    SUMMARY_ROOM_NAME,
     ;
+
+    public boolean isHat() {
+        return this.name().contains("HAT");
+    }
 
 }

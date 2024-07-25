@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,7 +48,8 @@ public class ChatAiMessageEntity extends BaseEntity {
     private ChatRoleEnum role;
 
     @Column(nullable = false)
-    private String message;
+    @Builder.Default
+    private String message = "";
 
     @Column(nullable = false)
     private boolean bookmarked;
@@ -56,9 +58,22 @@ public class ChatAiMessageEntity extends BaseEntity {
     @JoinColumn(name = "chatRoomId", insertable = false, updatable = false)
     private ChatRoomEntity chatRoom;
 
+    @ManyToOne(targetEntity = ChatUserMessageEntity.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "chatUserMessageId", insertable = false, updatable = false)
+    private ChatUserMessageEntity chatUserMessage;
+
     public void updateBookMark() {
         this.bookmarked = !this.bookmarked;
     }
 
 
+    public void updateMessage(String message) {
+        this.message = message;
+    }
+
+    public String squashMessage() {
+        return Optional.ofNullable(chatUserMessage)
+            .map(ChatUserMessageEntity::getMessage)
+            .orElse("") + this.message;
+    }
 }
