@@ -13,6 +13,8 @@ from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from typing import List, Optional
 from pydantic import Field
+import httpx
+from starlette.responses import StreamingResponse
 
 # 환경 변수 설정
 os.environ["TAVILY_API_KEY"] = "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"
@@ -48,9 +50,7 @@ blue_summary_prompt = """
     3. 비즈니스 모델 : 장기적으로 광고와 제휴 마케팅을 통해 초기 수익을 창출하세요. 하지만 반려동물에 대한 주제는 전문성을 필요로 합니다. 전문성이 없다면 전문가와 협업이 필요해요.
     4. 파생가능 아이디어 : 노화 관리에 도움이 되는 제품 리뷰,수의사나 반려동물 전문가와의 인터뷰 글, 노화 관리 경험담 모음, 단계별 노화 관리 가이드 블로그 글 시리즈,노화 관리와 관련된 제품 리뷰
 
-    위의 발화예시를 참고하여, 다음 회의 내용을 요약해주세요:
-
-   
+    위의 발화예시를 참고하여, 다음 회의 내용을 요약해주세요
     """
 # 모자별 지시사항 모음
 instructions = {
@@ -170,13 +170,12 @@ red_prompt = create_chat_prompt(instructions_2["red_cap"])
 green_prompt = create_chat_prompt(instructions_2["green_cap"])
 yellow_prompt = create_chat_prompt(instructions_2["yellow_cap"])
 
+
+blue_summary_chain = LLMChain(llm=llm,prompt=blue_summary_prompt)
 gpt_blue_chain = LLMChain(llm=llm, prompt=blue_prompt)
 gpt_red_chain = LLMChain(llm=llm, prompt=red_prompt)
 gpt_green_chain = LLMChain(llm=llm, prompt=green_prompt)
 gpt_yellow_chain = LLMChain(llm=llm, prompt=yellow_prompt)
-
-blue_summary_chain = LLMChain(llm=llm, prompt=blue_summary_prompt)
-
 
 # FastAPI 앱 초기화
 app = FastAPI()
@@ -193,6 +192,25 @@ class CompletionGenerator:
         self.api_key_primary_val = api_key_primary_val
         self.request_id = request_id
 
+    async def execute_async(self, completion_request: dict) -> str:
+        headers = {
+            'X-NCP-CLOVASTUDIO-API-KEY': self.api_key,
+            'X-NCP-APIGW-API-KEY': self.api_key_primary_val,
+            'X-NCP-CLOVASTUDIO-REQUEST-ID': self.request_id,
+            'Content-Type': 'application/json; charset=utf-8',
+            'Accept': 'text/event-stream'
+        }
+
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                self.host,
+                headers=headers,
+                json=completion_request
+            )
+            response.raise_for_status()
+
+            async for chunk in response.aiter_bytes():
+                yield chunk
     def execute(self, completion_request: dict) -> str:
         headers = {
             'X-NCP-CLOVASTUDIO-API-KEY': self.api_key,
@@ -234,7 +252,7 @@ class ClovaBaseLLM:
             "stopBefore": [],
             "includeAiFilters": False
         }
-        return self.generator.execute(completion_request)
+        return self.generator.execute_async(completion_request)
 
 # Black Cap LLM 설정
 class BlackClovaBaseLLM(LLM):
@@ -315,7 +333,7 @@ def create_endpoint(instructions_key: str):
     async def endpoint(query: Query):
         try:
             result = clova_llm.invoke(instructions[instructions_key], query.user_query)
-            return {"result": result}
+            return StreamingResponse(result, media_type="text/event-stream")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
     return endpoint
