@@ -12,6 +12,7 @@ public interface ChatAiMessageRepository extends JpaRepository<ChatAiMessageEnti
         select cam
         from ChatAiMessage cam
         join fetch cam.chatRoom cr
+        join fetch cam.chatUserMessage cum
         where cr.userId = :userId
         and cam.bookmarked = true
         and cam.deleted = false

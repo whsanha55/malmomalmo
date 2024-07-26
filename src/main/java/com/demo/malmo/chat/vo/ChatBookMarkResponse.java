@@ -23,6 +23,8 @@ public class ChatBookMarkResponse extends BaseResponse {
         Long chatRoomId;
         @Schema(description = "채팅방 이름", example = "room name")
         String roomName;
+        @Schema(description = "대화 턴 단계", example = "1")
+        int phase;
         @Schema(description = "역할 모자", example = "BLUD_HAT")
         ChatRoleEnum role;
         @Schema(description = "대화 내용", example = "hello world")
@@ -33,6 +35,7 @@ public class ChatBookMarkResponse extends BaseResponse {
             this.chatRoomId = entity.getChatRoomId();
             this.role = entity.getRole();
             this.message = entity.getMessage();
+            this.phase = entity.getChatUserMessage().getPhase();
             this.roomName = entity.getChatRoom().getRoomName();
         }
     }
