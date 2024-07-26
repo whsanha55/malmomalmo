@@ -9,8 +9,9 @@ import com.demo.malmo.chat.vo.ChatRequest;
 import com.demo.malmo.chat.vo.ChatStreamRequest;
 import com.demo.malmo.chat.vo.ChatStreamResponse;
 import com.demo.malmo.global.api.clova.service.ClovaService;
-import com.demo.malmo.global.api.clova.vo.ClovaResponse;
-import com.demo.malmo.global.api.clova.vo.HyperClovaRequest;
+import com.demo.malmo.global.api.clova.vo.GptRequest;
+import com.demo.malmo.global.api.clova.vo.GptResponse;
+import com.demo.malmo.global.exception.BaseException;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -54,19 +55,21 @@ public class ChatFacade {
             .role(request.getRole())
             .build());
 
-        return clovaService.getChatCompletion(new HyperClovaRequest(message), request.getRole())
+        return clovaService.getChatCompletion(new GptRequest(message), request.getRole(), request.getGptType())
             .publishOn(Schedulers.boundedElastic())
             .doOnNext(response -> { // clova 대화 결과 저장
-                if (response.isResult()) {
+                    log.info("response : {}", response);
                     if (request.getRole() == ChatRoleEnum.SUMMARY_ROOM_NAME) {
-                        chatService.updateRoomName(chatUserMessage.getChatRoomId(), response.getMessage());
+                        chatService.updateRoomName(chatUserMessage.getChatRoomId(), response.getResult());
                     }
-                    chatService.updateMessage(chatAiMessage, response.getMessage());
-
+                    chatService.updateMessage(chatAiMessage, response.getResult());
                 }
+            )
+            .onErrorResume(BaseException.class, e -> {
+                log.error("", e);
+                return Flux.just(new GptResponse());
             })
-            .filter(ClovaResponse::isStream)        //  대화 결과 중 stream 만 반환
-            .map(response -> new ChatStreamResponse(chatAiMessage, response.getMessage())
+            .map(response -> new ChatStreamResponse(chatAiMessage, response.getResult())
             );
     }
 

@@ -28,11 +28,8 @@ public class ClovaConfig {
     @Bean
     public WebClient clovaWebClient() {
         return WebClient.builder()
-            .baseUrl("https://clovastudio.stream.ntruss.com")
-            .defaultHeader("X-NCP-CLOVASTUDIO-API-KEY", studioApiKey)
-            .defaultHeader("X-NCP-APIGW-API-KEY", gatewayKey)
+            .baseUrl("http://223.130.157.144:8000/")
             .defaultHeader("Content-Type", "application/json")
-            .defaultHeader("Accept", "text/event-stream")
             .build();
     }
 }

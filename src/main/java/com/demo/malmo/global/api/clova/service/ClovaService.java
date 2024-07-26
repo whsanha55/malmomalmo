@@ -1,8 +1,10 @@
 package com.demo.malmo.global.api.clova.service;
 
 import com.demo.malmo.chat.enums.ChatRoleEnum;
-import com.demo.malmo.global.api.clova.vo.ClovaResponse;
-import com.demo.malmo.global.api.clova.vo.HyperClovaRequest;
+import com.demo.malmo.chat.enums.GptTypeEnum;
+import com.demo.malmo.global.api.clova.vo.GptRequest;
+import com.demo.malmo.global.api.clova.vo.GptResponse;
+import com.demo.malmo.global.exception.BaseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +24,11 @@ public class ClovaService {
     private final ObjectMapper objectMapper;
 
 
-    public Flux<ClovaResponse> getChatCompletion(HyperClovaRequest request, ChatRoleEnum role) {
+    public Flux<GptResponse> getChatCompletion(GptRequest request, ChatRoleEnum role, GptTypeEnum gptType) {
 
         log.info("request : {}", request);
-        // TODO: 7/21/24 role 에 해당하는 각 모델에 대한 clova 대화 생성 필요
         return clovaWebClient.post()
-            .uri("/testapp/v1/chat-completions/HCX-003")
+            .uri(getUrl(role, gptType))
             .bodyValue(request)
             .retrieve()
             .onStatus(HttpStatusCode::isError, clientResponse -> {
@@ -40,14 +41,41 @@ public class ClovaService {
             .doOnNext(response -> log.info("response : {}", response))
             .map(response -> {
                 try {
-                    return objectMapper.readValue(response, ClovaResponse.class);
+                    return objectMapper.readValue(response, GptResponse.class);
                 } catch (JsonProcessingException e) {
-                    log.error("",e);
-                    return new ClovaResponse();
+                    log.error("", e);
+                    return new GptResponse();
                 }
             });
-//            .bodyToFlux(ClovaResponse.class);
     }
 
+    private String getUrl(ChatRoleEnum role, GptTypeEnum gptType) {
+        if (gptType == GptTypeEnum.HYPER_CLOVA) {
+            return switch (role) {
+                case WHITE_HAT -> "white-cap-brainstorming/";
+                case BLACK_HAT -> "black-cap-brainstorming/";
+                case GREEN_HAT -> "green-cap-brainstorming/";
+                case YELLOW_HAT -> "yellow-cap-brainstorming/";
+                case RED_HAT -> "red-cap-brainstorming/";
+                case BLUE_HAT -> "blue-start-brainstorming/";
+                case BLUE_HAT_BEGIN -> "blue-start-brainstorming/";
+                case SUMMARY, SUMMARY_ROOM_NAME -> "blue-summary-brainstorming/";
+                default -> throw new BaseException("Invalid role: " + role);
+            };
+        } else {
+            return switch (role) {
+                case WHITE_HAT -> "gpt-white-brainstorming/";
+                case BLACK_HAT -> "gpt-black-brainstorming/";
+                case GREEN_HAT -> "gpt-green-brainstorming/";
+                case YELLOW_HAT -> "gpt-yellow-brainstorming/";
+                case RED_HAT -> "gpt-red-brainstorming/";
+                case BLUE_HAT -> "gpt-blue-brainstorming/";
+                case BLUE_HAT_BEGIN -> "gpt-blue-brainstorming/";
+                case SUMMARY, SUMMARY_ROOM_NAME -> "gpt-blue-summary-brainstorming/";
+                default -> throw new BaseException("Invalid role: " + role);
+            };
+        }
+
+    }
 
 }
