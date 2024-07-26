@@ -60,7 +60,7 @@ public class ChatFacade {
             .doOnNext(response -> { // clova 대화 결과 저장
                     log.info("response : {}", response);
                     if (request.getRole() == ChatRoleEnum.SUMMARY_ROOM_NAME) {
-                        chatService.updateRoomName(chatUserMessage.getChatRoomId(), response.getResult());
+                        chatService.updateRoomName(chatUserMessage.getChatRoomId(), response.getResult().substring(0,100));
                     }
                     chatService.updateMessage(chatAiMessage, response.getResult());
                 }
