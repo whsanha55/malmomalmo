@@ -17,10 +17,12 @@ public class ChatBookMarkResponse extends BaseResponse {
     @Value
     public static class ChatBookMark {
 
-        @Schema(description = "북마크된 ai 모자 대답 id", example = "123")
-        Long chatAiRoomId;
         @Schema(description = "채팅방 id", example = "123")
-        Long chatRoomId;
+        Long roomId;
+        @Schema(description = "대화방 페이즈 id", example = "1")
+        Long roomPhaseId;
+        @Schema(description = "북마크된 ai 모자 대답 id", example = "123")
+        Long aiMessageId;
         @Schema(description = "채팅방 이름", example = "room name")
         String roomName;
         @Schema(description = "대화 턴 단계", example = "1")
@@ -31,8 +33,9 @@ public class ChatBookMarkResponse extends BaseResponse {
         String message;
 
         public ChatBookMark(ChatAiMessageEntity entity) {
-            this.chatAiRoomId = entity.getId();
-            this.chatRoomId = entity.getChatRoomId();
+            this.roomId = entity.getChatRoomId();
+            this.roomPhaseId = entity.getChatUserMessage().getId();
+            this.aiMessageId = entity.getId();
             this.role = entity.getRole();
             this.message = entity.getMessage();
             this.phase = entity.getChatUserMessage().getPhase();

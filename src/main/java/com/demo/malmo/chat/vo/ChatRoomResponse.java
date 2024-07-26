@@ -1,8 +1,10 @@
 package com.demo.malmo.chat.vo;
 
 import com.demo.malmo.chat.entity.ChatRoomEntity;
+import com.demo.malmo.chat.entity.ChatUserMessageEntity;
 import com.demo.malmo.global.base.BaseResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Comparator;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -30,11 +32,18 @@ public class ChatRoomResponse extends BaseResponse {
         @Schema(description = "채팅방 카테고리", example = "room category")
         String category;
 
+        @Schema(description = "대화 턴 단계", example = "1")
+        int phase;
+
 
         public ChatRoom(ChatRoomEntity entity) {
             this.id = entity.getId();
             this.roomName = entity.getRoomName();
             this.category = entity.getCategory();
+            this.phase = entity.getChatUserMessages().stream()
+                .map(ChatUserMessageEntity::getPhase)
+                .max(Comparator.naturalOrder())
+                .orElse(1);
         }
     }
 

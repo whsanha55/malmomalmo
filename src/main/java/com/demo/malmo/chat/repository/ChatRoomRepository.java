@@ -10,6 +10,7 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoomEntity, Long> 
     @Query(value = """
         select cr
         from ChatRoom cr
+        join fetch cr.chatUserMessages cu
         where cr.userId = :userId
         and cr.deleted = false
         order by cr.id desc
