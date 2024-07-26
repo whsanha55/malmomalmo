@@ -13,8 +13,8 @@ public enum ChatRoleEnum {
     SUMMARY_ROOM_NAME,
     ;
 
-    public boolean isHat() {
-        return this.name().contains("HAT");
+    public boolean withoutRoomName() {
+        return this != SUMMARY_ROOM_NAME;
     }
 
 }
