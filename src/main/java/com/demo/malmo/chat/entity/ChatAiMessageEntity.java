@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -54,6 +55,9 @@ public class ChatAiMessageEntity extends BaseEntity {
     @Column(nullable = false)
     private boolean bookmarked;
 
+    @Column
+    private LocalDateTime bookmarkedAt;
+
     @ManyToOne(targetEntity = ChatRoomEntity.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "chatRoomId", insertable = false, updatable = false)
     private ChatRoomEntity chatRoom;
@@ -64,6 +68,7 @@ public class ChatAiMessageEntity extends BaseEntity {
 
     public void updateBookMark() {
         this.bookmarked = !this.bookmarked;
+        this.bookmarkedAt = LocalDateTime.now();
     }
 
 

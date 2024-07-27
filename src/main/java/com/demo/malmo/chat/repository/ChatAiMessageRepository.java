@@ -4,7 +4,6 @@ import com.demo.malmo.chat.entity.ChatAiMessageEntity;
 import com.demo.malmo.chat.enums.ChatRoleEnum;
 import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,7 +18,7 @@ public interface ChatAiMessageRepository extends JpaRepository<ChatAiMessageEnti
         where cr.userId = :userId
         and cam.bookmarked = true
         and cam.deleted = false
-        order by cam.id desc
+        order by cam.bookmarkedAt desc, cam.id desc
         """)
     List<ChatAiMessageEntity> findBookmarked(String userId);
 
