@@ -332,6 +332,7 @@ def create_endpoint(instructions_key: str):
             result = clova_llm.invoke(instructions[instructions_key], query.user_query)
             return {"result": result}
         except Exception as e:
+            print(e)
             raise HTTPException(status_code=500, detail=str(e))
     return endpoint
 
@@ -341,6 +342,7 @@ def summary_endpoint(instructions_key: str):
             result = summary_llm.invoke(instructions[instructions_key], query.user_query)
             return {"result": result}
         except Exception as e:
+            print(e)
             raise HTTPException(status_code=500, detail=str(e))
     return endpoint
 
@@ -358,14 +360,16 @@ red_prompt = create_chat_prompt(instructions_2["red_cap"])
 green_prompt = create_chat_prompt(instructions_2["green_cap"])
 yellow_prompt = create_chat_prompt(instructions_2["yellow_cap"])
 black_prompt = create_chat_prompt(instructions_2["black_cap"])
+gpt_title_prompt = create_chat_prompt(instructions['title_summary'])
+
 
 gpt_blue_chain = LLMChain(llm=llm, prompt=blue_prompt)
 gpt_red_chain = LLMChain(llm=llm, prompt=red_prompt)
 gpt_green_chain = LLMChain(llm=llm, prompt=green_prompt)
 gpt_yellow_chain = LLMChain(llm=llm, prompt=yellow_prompt)
 gpt_black_chain = LLMChain(llm=llm, prompt=black_prompt)
-
 blue_summary_chain = LLMChain(llm=llm, prompt=blue_summary_prompt)
+gpt_title_chain = LLMChain(llm=llm,prompt=gpt_title_prompt)
 
 # 엔드포인트 정의
 app.post("/title-summary-brainstorming/")(summary_endpoint("title_summary"))
@@ -444,6 +448,7 @@ async def get_black_cap_result(query: Query):
         result = black_clova_llm._call(query.user_query)
         return {"result": result}
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=500, detail=str(e))
     
 # 블루요약
@@ -453,6 +458,7 @@ async def get_blue_summary(query: Query):
         result = summary_llm.invoke(instructions["blue_summary"], query.user_query)
         return {"result": result}
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=500, detail=str(e))
 
 # GPT 모자
@@ -462,6 +468,7 @@ async def blue_brainstorming(query: Query):
         result = gpt_blue_chain.run(user_query=query.user_query)
         return {"result": result}
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/gpt-red-brainstorming/")
@@ -470,6 +477,7 @@ async def red_brainstorming(query: Query):
         result = gpt_red_chain.run(user_query=query.user_query)
         return {"result": result}
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/gpt-green-brainstorming/")
@@ -478,6 +486,7 @@ async def green_brainstorming(query: Query):
         result = gpt_green_chain.run(user_query=query.user_query)
         return {"result": result}
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/gpt-yellow-brainstorming/")
@@ -486,6 +495,7 @@ async def yellow_brainstorming(query: Query):
         result = gpt_yellow_chain.run(user_query=query.user_query)
         return {"result": result}
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=500, detail=str(e))
     
 @app.post("/gpt-black-brainstorming/")
@@ -494,6 +504,17 @@ async def black_brainstorming(query: Query):
         result = gpt_black_chain.run(user_query=query.user_query)
         return {"result": result}
     except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/gpt-title-summary/")
+async def gpt_title_brainstorming(query: Query):
+    try:
+        result = gpt_title_chain.run(user_query=query.user_query)
+        return {"result": result}
+    except Exception as e:
+        print(e)
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
