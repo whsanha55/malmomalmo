@@ -361,6 +361,7 @@ green_prompt = create_chat_prompt(instructions_2["green_cap"])
 yellow_prompt = create_chat_prompt(instructions_2["yellow_cap"])
 black_prompt = create_chat_prompt(instructions_2["black_cap"])
 gpt_title_prompt = create_chat_prompt(instructions['title_summary'])
+gpt_blue_summary_prompt = create_chat_prompt(gpt_blue_inst)
 
 
 gpt_blue_chain = LLMChain(llm=llm, prompt=blue_prompt)
@@ -370,6 +371,7 @@ gpt_yellow_chain = LLMChain(llm=llm, prompt=yellow_prompt)
 gpt_black_chain = LLMChain(llm=llm, prompt=black_prompt)
 blue_summary_chain = LLMChain(llm=llm, prompt=blue_summary_prompt)
 gpt_title_chain = LLMChain(llm=llm,prompt=gpt_title_prompt)
+gpt_blue_summary_chain = LLMChain(llm=llm, prompt=gpt_blue_summary_prompt)
 
 # 엔드포인트 정의
 app.post("/title-summary-brainstorming/")(summary_endpoint("title_summary"))
@@ -515,6 +517,15 @@ async def gpt_title_brainstorming(query: Query):
         return {"result": result}
     except Exception as e:
         print(e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/gpt-blue-total-summary/")
+async def gpt_blue_total_summary(query: Query):
+    try:
+        result = gpt_blue_summary_chain.run(user_query=query.user_query)
+        return {"result": result}
+    except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
