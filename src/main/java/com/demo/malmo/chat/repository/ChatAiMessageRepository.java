@@ -2,8 +2,11 @@ package com.demo.malmo.chat.repository;
 
 import com.demo.malmo.chat.entity.ChatAiMessageEntity;
 import com.demo.malmo.chat.enums.ChatRoleEnum;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 public interface ChatAiMessageRepository extends JpaRepository<ChatAiMessageEntity, Long> {
@@ -29,4 +32,16 @@ public interface ChatAiMessageRepository extends JpaRepository<ChatAiMessageEnti
         and cam.deleted = false
         """)
     List<ChatAiMessageEntity> findByChatRoomIdAndRole(Long chatRoomId, ChatRoleEnum role);
+
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = """
+        update ChatAiMessage cam
+        set cam.deleted = true
+        where cam.chatUserMessageId = :chatUserMessageId
+        and cam.role = :role
+        and cam.deleted = false
+        """)
+    int updateDeletedTrueByUserMessageIdAndRole(Long chatUserMessageId, ChatRoleEnum role);
 }

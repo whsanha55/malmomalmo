@@ -120,6 +120,7 @@ public class ChatService {
 
     @Transactional
     public void updateMessage(ChatAiMessageEntity entity, String message) {
+        chatAiMessageRepository.updateDeletedTrueByUserMessageIdAndRole(entity.getChatUserMessageId(), entity.getRole());
         entity.updateMessage(message);
         chatAiMessageRepository.save(entity);
     }
