@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
@@ -35,7 +36,7 @@ public class ChatFacade {
 
         var chatRoom = Optional.ofNullable(request.getRoomId())
             .map(chatService::getRoom)
-            .orElseGet(() -> chatService.createRoom(userId, request.getCategory()));
+            .orElseGet(() -> chatService.createRoom(userId, request.getCategory(), request.getMessage()));
 
         // 요청 사용자 대화 추가
         return chatService.createChatUserMessage(chatRoom, request.getMessage(), request.getRelyAiMessageId());
@@ -60,7 +61,7 @@ public class ChatFacade {
             .doOnNext(response -> { // clova 대화 결과 저장
                     log.info("response : {}", response);
                     if (request.getRole() == ChatRoleEnum.SUMMARY_ROOM_NAME) {
-                        chatService.updateRoomName(chatUserMessage.getChatRoomId(), response.getResult().substring(0,100));
+                        chatService.updateRoomName(chatUserMessage.getChatRoomId(), StringUtils.substring(response.getResult(), 0, 100));
                     }
                     chatService.updateMessage(chatAiMessage, response.getResult());
                 }

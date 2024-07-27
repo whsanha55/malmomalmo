@@ -51,8 +51,8 @@ public class ClovaService {
 
     private String getUrl(ChatRoleEnum role, GptTypeEnum gptType) {
         if (gptType == GptTypeEnum.HYPER_CLOVA) {
-            return switch (role) {
-                case WHITE_HAT -> "white-cap-brainstorming/";
+            return switch (role) {  // 클로바
+                case WHITE_HAT -> "white-cap-first-brainstorming/";
                 case BLACK_HAT -> "black-cap-brainstorming/";
                 case GREEN_HAT -> "green-cap-brainstorming/";
                 case YELLOW_HAT -> "yellow-cap-brainstorming/";
@@ -64,8 +64,8 @@ public class ClovaService {
                 default -> throw new BaseException("Invalid role: " + role);
             };
         } else {
-            return switch (role) {
-                case WHITE_HAT -> "gpt-white-brainstorming/";
+            return switch (role) {  // gpt-4 mini
+                case WHITE_HAT -> "white-cap-second-brainstorming/";
                 case BLACK_HAT -> "gpt-black-brainstorming/";
                 case GREEN_HAT -> "gpt-green-brainstorming/";
                 case YELLOW_HAT -> "gpt-yellow-brainstorming/";

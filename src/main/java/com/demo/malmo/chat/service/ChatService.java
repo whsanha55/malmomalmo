@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -26,10 +27,11 @@ public class ChatService {
     private final ChatAiMessageRepository chatAiMessageRepository;
 
     @Transactional
-    public ChatRoomEntity createRoom(String userId, String chatCategory) {
+    public ChatRoomEntity createRoom(String userId, String chatCategory, String message) {
         return chatRoomRepository.save(ChatRoomEntity.builder()
             .userId(userId)
             .category(chatCategory)
+                .roomName(StringUtils.substring(message, 0, 100))
             .build());
     }
 
