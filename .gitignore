@@ -48,6 +48,6 @@ buildNumber.properties
 .classpath
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij+iml,maven
-to_server.sh
+#to_server.sh
 *.log
 application-local.yml
