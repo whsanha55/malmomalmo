@@ -72,7 +72,7 @@ public class ClovaService {
                 case RED_HAT -> "gpt-red-brainstorming/";
                 case BLUE_HAT -> "gpt-blue-brainstorming/";
                 case BLUE_HAT_BEGIN -> "gpt-blue-brainstorming/";
-                case SUMMARY -> "blue-summary-brainstorming/";
+                case SUMMARY -> "gpt-blue-total-summary/";
                 case SUMMARY_ROOM_NAME -> "gpt-title-summary/";
                 default -> throw new BaseException("Invalid role: " + role);
             };
