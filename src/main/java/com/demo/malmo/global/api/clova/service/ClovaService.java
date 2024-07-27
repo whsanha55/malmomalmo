@@ -24,11 +24,11 @@ public class ClovaService {
     private final ObjectMapper objectMapper;
 
 
-    public Flux<GptResponse> getChatCompletion(GptRequest request, ChatRoleEnum role, GptTypeEnum gptType) {
+    public Flux<GptResponse> getChatCompletion(GptRequest request, ChatRoleEnum role, GptTypeEnum gptType, int phase) {
 
         log.info("request : {}", request);
         return clovaWebClient.post()
-            .uri(getUrl(role, gptType))
+            .uri(getUrl(role, gptType, phase))
             .bodyValue(request)
             .retrieve()
             .onStatus(HttpStatusCode::isError, clientResponse -> {
@@ -49,7 +49,15 @@ public class ClovaService {
             });
     }
 
-    private String getUrl(ChatRoleEnum role, GptTypeEnum gptType) {
+    private String getUrl(ChatRoleEnum role, GptTypeEnum gptType, int phase) {
+        if (role == ChatRoleEnum.BLUE_HAT) {
+            return switch (phase) {
+                case 1 ->"blue-start/";
+                case 2 -> "gpt_2_start_blue/";
+                default -> "gpt_3_start_blue/";
+            };
+        }
+
         if (gptType == GptTypeEnum.HYPER_CLOVA) {
             return switch (role) {  // 클로바
                 case WHITE_HAT -> "white-cap-first-brainstorming/";
@@ -57,10 +65,9 @@ public class ClovaService {
                 case GREEN_HAT -> "green-cap-brainstorming/";
                 case YELLOW_HAT -> "yellow-cap-brainstorming/";
                 case RED_HAT -> "red-cap-brainstorming/";
-                case BLUE_HAT -> "blue-start-brainstorming/";
-                case BLUE_HAT_BEGIN -> "blue-start-brainstorming/";
-                case SUMMARY -> "blue-summary-brainstorming/";
-                case SUMMARY_ROOM_NAME -> "title-summary-brainstorming/";
+                case BLUE_HAT_BEGIN -> "blue-start/";
+                case SUMMARY -> "total-summary/";
+                case SUMMARY_ROOM_NAME -> "clova-title-summary/";
                 default -> throw new BaseException("Invalid role: " + role);
             };
         } else {
@@ -70,7 +77,6 @@ public class ClovaService {
                 case GREEN_HAT -> "gpt-green-brainstorming/";
                 case YELLOW_HAT -> "gpt-yellow-brainstorming/";
                 case RED_HAT -> "gpt-red-brainstorming/";
-                case BLUE_HAT -> "gpt-blue-brainstorming/";
                 case BLUE_HAT_BEGIN -> "gpt-blue-brainstorming/";
                 case SUMMARY -> "gpt-blue-total-summary/";
                 case SUMMARY_ROOM_NAME -> "gpt-title-summary/";

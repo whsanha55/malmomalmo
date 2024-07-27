@@ -56,7 +56,7 @@ public class ChatFacade {
             .role(request.getRole())
             .build());
 
-        return clovaService.getChatCompletion(new GptRequest(message), request.getRole(), request.getGptType())
+        return clovaService.getChatCompletion(new GptRequest(message), request.getRole(), request.getGptType(),chatUserMessage.getPhase())
             .publishOn(Schedulers.boundedElastic())
             .doOnNext(response -> { // clova 대화 결과 저장
                     log.info("response : {}", response);
