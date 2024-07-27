@@ -129,13 +129,21 @@ instructions = {
 }
 
 instructions_2 = {
-    "start_blue_cap": '''
+    "start_2_blue_cap": '''
         # 지시사항:
-        - 이전대화 내역을 참고하고 , 시작 진행을하세요
+        - 이전대화 내역을 참고하고, 2번째 회의를 진행하세요.
         - 당신은 파란모자로 유저의 브레인스토밍 토론을 진행할 진행자입니다.
         - 당신은 중후한 40대 타입의 아나운서입니다.
         ## 발화 예시:
-        안녕하세요 저는 파란 모자입니다. 사용자님의 의견을 종합해서 다시한번 이야기를 나누어보겠습니다.
+        안녕하세요 저는 파란 모자입니다. 첫번째회의에서 나온 사용자님의 아이디어와, 새로 요청해주신 아이디어를 통해 두번째 회의를 시작해보겠습니다. 
+    ''',
+    "start_3_blue_cap": '''
+        # 지시사항:
+        - 이전대화 내역을 참고하고 , 3번째 회의를 진행하세요
+        - 당신은 파란모자로 유저의 브레인스토밍 토론을 진행할 진행자입니다.
+        - 당신은 중후한 40대 타입의 아나운서입니다.
+        ## 발화 예시:
+        안녕하세요 저는 파란 모자입니다. 첫번째와 두번째 회의에서 나온 사용자님의 아이디어와, 새로 요청해주신 아이디어를 통해 두번째 회의를 시작해보겠습니다. 
     ''',
     "red_cap": '''
         # 지시사항:
@@ -407,7 +415,8 @@ def create_chat_prompt(instructions: str):
 
 # LLMChain 객체 생성
 
-start_blue_prompt = create_chat_prompt(instructions_2["start_blue_cap"])
+start_2_turn_blue_prompt = create_chat_prompt(instructions_2["start_2_blue_cap"])
+start_3_turn_blue_prompt = create_chat_prompt(instructions_2["start_3_blue_cap"])
 red_prompt = create_chat_prompt(instructions_2["red_cap"])
 green_prompt = create_chat_prompt(instructions_2["green_cap"])
 yellow_prompt = create_chat_prompt(instructions_2["yellow_cap"])
@@ -418,7 +427,8 @@ gpt_total_summary_prompt = create_chat_prompt(total_summary_prompt)
 
 # langchain 객체 생성
 
-gpt_start_blue_chain = LLMChain(llm=llm, prompt=start_blue_prompt) #시작
+gpt_2_start_blue_chain = LLMChain(llm=llm, prompt=start_2_turn_blue_prompt) #시작
+gpt_3_start_blue_chain = LLMChain(llm=llm, prompt=start_3_turn_blue_prompt) #시작
 gpt_red_chain = LLMChain(llm=llm, prompt=red_prompt)
 gpt_green_chain = LLMChain(llm=llm, prompt=green_prompt)
 gpt_yellow_chain = LLMChain(llm=llm, prompt=yellow_prompt)
@@ -469,10 +479,19 @@ async def get_black_cap_result(query: Query):
 
 # 2~3 턴들
 # GPT 모자
-@app.post("/gpt_start_blue/") 
-async def gpt_start_blue_brainstorming(query: Query):
+@app.post("/gpt_2_start_blue/") 
+async def gpt_2_start_blue_brainstorming(query: Query):
     try:
-        result = gpt_start_blue_chain.run(user_query=query.user_query)
+        result = gpt_2_start_blue_chain.run(user_query=query.user_query)
+        return {"result": result}
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.post("/gpt_3_start_blue/") 
+async def gpt_3_start_blue_brainstorming(query: Query):
+    try:
+        result = gpt_3_start_blue_chain.run(user_query=query.user_query)
         return {"result": result}
     except Exception as e:
         print(e)
