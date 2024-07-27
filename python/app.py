@@ -432,7 +432,7 @@ async def get_white_cap_result(query: Query):
 @app.post("/white-cap-second-brainstorming/")
 async def get_white_cap_result(query: Query):
     try:
-        result = white_cap_agent_first.invoke({"input": query.user_query})
+        result = white_cap_agent_second.invoke({"input": query.user_query})
         return {"result": result['output']}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
