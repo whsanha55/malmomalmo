@@ -59,7 +59,8 @@ public class ClovaService {
                 case RED_HAT -> "red-cap-brainstorming/";
                 case BLUE_HAT -> "blue-start-brainstorming/";
                 case BLUE_HAT_BEGIN -> "blue-start-brainstorming/";
-                case SUMMARY, SUMMARY_ROOM_NAME -> "blue-summary-brainstorming/";
+                case SUMMARY -> "title-summary-brainstorming/";
+                case SUMMARY_ROOM_NAME -> "blue-summary-brainstorming/";
                 default -> throw new BaseException("Invalid role: " + role);
             };
         } else {
@@ -71,7 +72,8 @@ public class ClovaService {
                 case RED_HAT -> "gpt-red-brainstorming/";
                 case BLUE_HAT -> "gpt-blue-brainstorming/";
                 case BLUE_HAT_BEGIN -> "gpt-blue-brainstorming/";
-                case SUMMARY, SUMMARY_ROOM_NAME -> "gpt-blue-summary-brainstorming/";
+                case SUMMARY -> "title-summary-brainstorming";
+                case SUMMARY_ROOM_NAME -> "gpt-blue-summary-brainstorming/";
                 default -> throw new BaseException("Invalid role: " + role);
             };
         }
