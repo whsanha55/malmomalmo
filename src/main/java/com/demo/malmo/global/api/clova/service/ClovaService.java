@@ -50,14 +50,6 @@ public class ClovaService {
     }
 
     private String getUrl(ChatRoleEnum role, GptTypeEnum gptType, int phase) {
-        if (role == ChatRoleEnum.BLUE_HAT) {
-            return switch (phase) {
-                case 1 ->"blue-start/";
-                case 2 -> "gpt_2_start_blue/";
-                default -> "gpt_3_start_blue/";
-            };
-        }
-
         if (gptType == GptTypeEnum.HYPER_CLOVA) {
             return switch (role) {  // 클로바
                 case WHITE_HAT -> "white-cap-first-brainstorming/";
@@ -66,6 +58,7 @@ public class ClovaService {
                 case YELLOW_HAT -> "yellow-cap-brainstorming/";
                 case RED_HAT -> "red-cap-brainstorming/";
                 case BLUE_HAT_BEGIN -> "blue-start/";
+                case BLUE_HAT -> "gpt-blue-total-summary/";
                 case SUMMARY -> "total-summary/";
                 case SUMMARY_ROOM_NAME -> "clova-title-summary/";
                 default -> throw new BaseException("Invalid role: " + role);
@@ -77,8 +70,13 @@ public class ClovaService {
                 case GREEN_HAT -> "gpt-green-brainstorming/";
                 case YELLOW_HAT -> "gpt-yellow-brainstorming/";
                 case RED_HAT -> "gpt-red-brainstorming/";
-                case BLUE_HAT_BEGIN -> "gpt-blue-brainstorming/";
-                case SUMMARY -> "gpt-blue-total-summary/";
+                case BLUE_HAT_BEGIN -> "blue-start-gpt/";
+                case BLUE_HAT -> switch (phase) {
+                    case 1 -> "blue-start-gpt/";
+                    case 2 -> "gpt_2_start_blue/";
+                    default -> "gpt_3_start_blue/";
+                };
+                case SUMMARY -> "total-summary/";
                 case SUMMARY_ROOM_NAME -> "gpt-title-summary/";
                 default -> throw new BaseException("Invalid role: " + role);
             };
