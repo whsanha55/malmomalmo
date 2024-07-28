@@ -131,7 +131,7 @@ instructions = {
 instructions_2 = {
     "start_2_blue_cap": '''
         # 지시사항:
-        - 이전대화 내역을 참고하고, 2번째 회의를 진행하세요.
+        - 이전대화 내역을 참고하고, 회의를 진행하세요.
         - 당신은 파란모자로 유저의 브레인스토밍 토론을 진행할 진행자입니다.
         - 당신은 중후한 40대 타입의 아나운서입니다.
         ## 발화 예시:
@@ -139,7 +139,7 @@ instructions_2 = {
     ''',
     "start_3_blue_cap": '''
         # 지시사항:
-        - 이전대화 내역을 참고하고 , 3번째 회의를 진행하세요
+        - 이전대화 내역을 참고하고 , 화의를 진행하세요.
         - 당신은 파란모자로 유저의 브레인스토밍 토론을 진행할 진행자입니다.
         - 당신은 중후한 40대 타입의 아나운서입니다.
         ## 발화 예시:
@@ -424,6 +424,7 @@ black_prompt = create_chat_prompt(instructions_2["black_cap"])
 gpt_title_prompt = create_chat_prompt(instructions['title_summary'])
 gpt_blue_summary_prompt = create_chat_prompt(gpt_blue_inst) # 매턴
 gpt_total_summary_prompt = create_chat_prompt(total_summary_prompt)
+gpt_blue_start_prompt = create_chat_prompt(instructions['start_blue_cap'])
 
 # langchain 객체 생성
 
@@ -436,6 +437,7 @@ gpt_black_chain = LLMChain(llm=llm, prompt=black_prompt)
 gpt_title_chain = LLMChain(llm=llm,prompt=gpt_title_prompt)
 gpt_blue_summary_chain = LLMChain(llm=llm, prompt=gpt_blue_summary_prompt)  # 턴 마다 마지막 end blue cap
 gpt_total_summary_chain = LLMChain(llm=llm, prompt=gpt_total_summary_prompt) # 회의결과 출력 
+gpt_blue_start_chain = LLMChain(llm=llm, prompt=gpt_blue_start_prompt)
 
 # white agent 설정
 def create_agent_executor(instructions: str, llm, tools):
@@ -458,6 +460,17 @@ app.post("/red-cap-brainstorming/")(create_endpoint("red_cap")) #1턴 빨간모�
 app.post("/green-cap-brainstorming/")(create_endpoint("green_cap")) # 1턴 초록모자
 app.post("/yellow-cap-brainstorming/")(create_endpoint("yellow_cap")) # 1턴 노랑모자
 
+
+@app.post("/blue-start-gpt/")
+async def blue_start_gpt(query: Query):
+    try:
+        result = gpt_blue_start_chain.run(user_query=query.user_query)
+        print(result)
+        return {"result": result}
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail=str(e))
+    
 @app.post("/white-cap-first-brainstorming/") # 1턴 하얀모자
 async def get_white_cap_result(query: Query):
     try:
