@@ -5,6 +5,8 @@ import com.demo.malmo.chat.enums.GptTypeEnum;
 import com.demo.malmo.global.api.clova.vo.GptRequest;
 import com.demo.malmo.global.api.clova.vo.GptResponse;
 import com.demo.malmo.global.exception.BaseException;
+import com.demo.malmo.gpt.service.GptService;
+import com.demo.malmo.gpt.util.PromptUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +24,21 @@ public class ClovaService {
 
     private final WebClient clovaWebClient;
     private final ObjectMapper objectMapper;
+    private final GptService gptService;
 
 
     public Flux<GptResponse> getChatCompletion(GptRequest request, ChatRoleEnum role, GptTypeEnum gptType, int phase) {
-
         log.info("request : {}", request);
+
+        // open-ai 요청인 경우 파이썬 서버로 보내지 않고 직접 처리
+        if (gptType == GptTypeEnum.OPEN_AI) {
+            var prompt = PromptUtil.prompt(role, phase);
+            return gptService.generate(prompt, request.getChatMessage())
+                .map(token -> GptResponse.builder()
+                    .result(token)
+                    .build());
+        }
+
         return clovaWebClient.post()
             .uri(getUrl(role, gptType, phase))
             .bodyValue(request)

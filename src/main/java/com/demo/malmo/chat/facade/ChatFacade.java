@@ -56,16 +56,20 @@ public class ChatFacade {
             .role(request.getRole())
             .build());
 
-        return clovaService.getChatCompletion(new GptRequest(message), request.getRole(), request.getGptType(),chatUserMessage.getPhase())
+        var sb = new StringBuilder();
+        return clovaService.getChatCompletion(new GptRequest(message), request.getRole(), request.getGptType(), chatUserMessage.getPhase())
             .publishOn(Schedulers.boundedElastic())
             .doOnNext(response -> { // clova 대화 결과 저장
                     log.info("response : {}", response);
-                    if (request.getRole() == ChatRoleEnum.SUMMARY_ROOM_NAME) {
-                        chatService.updateRoomName(chatUserMessage.getChatRoomId(), StringUtils.substring(response.getResult(), 0, 100));
-                    }
-                    chatService.updateMessage(chatAiMessage, response.getResult());
+                    sb.append(response.getResult());
                 }
             )
+            .doFinally(signalType -> {
+                if (request.getRole() == ChatRoleEnum.SUMMARY_ROOM_NAME) {
+                    chatService.updateRoomName(chatUserMessage.getChatRoomId(), StringUtils.substring(sb.toString(), 0, 100));
+                }
+                chatService.updateMessage(chatAiMessage, sb.toString());
+            })
             .onErrorResume(BaseException.class, e -> {
                 log.error("", e);
                 return Flux.just(new GptResponse());
