@@ -1,0 +1,11 @@
+api:
+  clova:
+    studio-api-key: NTA0MjU2MWZlZTcxNDJiYyBdmB26fM9O5XCDoDkBgCxhAOyFLsqP9K2m0yJ7b1g9
+    gateway-key: T1uJ6v9Mnos2RRUCtaDaqABiGNjX0T0WmKL7NNcu
+spring:
+  datasource:
+    password: csg4M4QK5EIV
+
+langchain:
+  key: sk-proj-Oy0z7lTsmMittrdN3Z1ZT3BlbkFJWo7bT10TfIDmqJnFncpj
+
