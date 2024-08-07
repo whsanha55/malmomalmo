@@ -86,13 +86,25 @@ public class ChatFacade {
             return entity.getMessage();
         }
 
+        if(request.getRole() == ChatRoleEnum.SUMMARY) {
+            return chatService.getChatUserMessages(entity.getChatRoomId())
+                .stream()
+                .filter(m -> m.getPhase() <= entity.getPhase())
+                .map(e -> e.getChatAiMessages().stream()
+                    .map(ChatAiMessageEntity::squashMessage)
+                    .collect(Collectors.joining(" ")))
+                .collect(Collectors.joining(" "));
+        }
+
         if (request.getGptType() == GptTypeEnum.OPEN_AI) {
+
             return entity.getMessage();
         }
 
         if (entity.getPhase() <= 1) {
             return entity.getMessage();
         }
+
 
         var beforeMessage = chatService.getChatAiMessages(entity.getChatRoomId(), request.getRole())
             .stream()

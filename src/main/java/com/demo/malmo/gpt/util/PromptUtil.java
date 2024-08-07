@@ -17,7 +17,7 @@ public class PromptUtil {
             case RED_HAT -> PromptUtil.GPT_RED_CAP;
             case BLUE_HAT_BEGIN -> PromptUtil.CLOVA_START_BLUE_CAP;
             case BLUE_HAT -> switch (phase) {
-                case 1 -> PromptUtil.CLOVA_START_BLUE_CAP;
+                case 1 -> PromptUtil.GPT_BLUE_INST;
                 case 2 -> PromptUtil.GPT_START_2_BLUE_CAP;
                 default -> PromptUtil.GPT_START_3_BLUE_CAP;
             };
@@ -62,7 +62,7 @@ public class PromptUtil {
         
         해당 아이템은 디저트 시장에서 프리미엄 포지셔닝을 목표로 할 수 있습니다. 특히 경쟁사의 원가 절감으로 인한 품질 저하가 있는 상황이므로, 맛과 품질을 핵심 소구점으로 하여 틈새 시장을 노려볼 수 있을 것으로 판단됩니다. 성장기에 있는 시장으로 상품성과 시장성이 충분해 보이지만, 유행에 민감할 확률이 높으므로 지속적인 트렌드 파악은 필수적입니다.
         
-        참고 링크: Patchi 초콜릿, GODIVA 초콜릿, Bateel 초콜릿
+        참고 링크: [한국농촌경제연구원 식품소비 행태조사](https://kjcn.or.kr/pdf/10.5720/kjcn.2021.26.5.337), [한국농촌경제연구원 식품소비 행태조사](https://kjcn.or.kr/pdf/10.5720/kjcn.2021.26.5.337), [한국농촌경제연구원 식품소비 행태조사](https://kjcn.or.kr/pdf/10.5720/kjcn.2021.26.5.337)
         
         <사이드 프로젝트 카테고리>
         
@@ -75,7 +75,7 @@ public class PromptUtil {
         
         이들의 공통점은 사용자의 상황과 취향에 맞는 음악을 추천해 준다는 것입니다. MVP 개발 방법론에 따라, 차별화 된 방식의 맞춤형 플레이리스트 기능을 찾는게 중요합니다. 가령 장소, 상황, 집중도를 선택하면 그에 따라 맞춤화된 플레이리스트를 자동 재생해주는 방식이 필요합니다. BM에 있어서는 초기에는 무료로 제공하되, 구독 모델을 통해 고급 기능을 추가하는 전략이 효과적입니다.
         
-        참고 링크: Brain.fm, Focus@Will, Noisli, Spotify
+        참고 링크: [한국농촌경제연구원 식품소비 행태조사](https://kjcn.or.kr/pdf/10.5720/kjcn.2021.26.5.337), [한국농촌경제연구원 식품소비 행태조사](https://kjcn.or.kr/pdf/10.5720/kjcn.2021.26.5.337), [한국농촌경제연구원 식품소비 행태조사](https://kjcn.or.kr/pdf/10.5720/kjcn.2021.26.5.337)
         """;
     public static final String WHITE_CAP_INST_SECOND = """
         #지시사항 : 당신은 경영 컨설턴트인 하얀 모자로 신뢰성 있는 출처의 통계를 검색하고, 통계 정보를 종합하여 사용자의 아이디어를 컨설팅하세요.

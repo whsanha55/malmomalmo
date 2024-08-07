@@ -9,6 +9,8 @@ import com.demo.malmo.gpt.service.GptService;
 import com.demo.malmo.gpt.util.PromptUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.Duration;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -58,7 +60,14 @@ public class ClovaService {
                     log.error("", e);
                     return new GptResponse();
                 }
-            });
+            })
+            .flatMap(r -> Flux.fromArray(Arrays.stream(r.getResult().split(" "))
+                .map(token -> GptResponse.builder()
+                    .result(token + " ")
+                    .build())
+                .toArray(GptResponse[]::new)))
+            .delayElements(Duration.ofMillis(100L))
+            ;
     }
 
     private String getUrl(ChatRoleEnum role, GptTypeEnum gptType, int phase) {
