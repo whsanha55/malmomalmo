@@ -66,7 +66,7 @@ public class ClovaService {
                     .result(token + " ")
                     .build())
                 .toArray(GptResponse[]::new)))
-            .delayElements(Duration.ofMillis(100L))
+            .delayElements(Duration.ofMillis(50L))
             ;
     }
 
