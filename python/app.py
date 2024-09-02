@@ -16,8 +16,8 @@ from typing import List, Optional
 from pydantic import Field
 
 # 환경 변수 설정
-os.environ["TAVILY_API_KEY"] = "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"
-openai_api_key = "sk-proj-Oy0z7lTsmMittrdN3Z1ZT3BlbkFJWo7bT10TfIDmqJnFncpj"
+os.environ["TAVILY_API_KEY"] = "depends-on-profile-tavily-api-key"
+openai_api_key = "depends-on-profile-openai-api-key"
 
 
 # LLM 초기화
